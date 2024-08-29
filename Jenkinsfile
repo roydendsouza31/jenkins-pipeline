@@ -10,8 +10,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build Docker image
-                    docker.build(IMAGE_NAME)
+                    // Use Docker Pipeline plugin to build the Docker image
+                    def app = docker.build(IMAGE_NAME)
                 }
             }
         }
