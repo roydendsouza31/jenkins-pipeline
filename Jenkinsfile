@@ -1,17 +1,30 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = 'flask-app'
-        CONTAINER_NAME = 'flask-app-container'
-    }
-
     stages {
+        stage('Clean Workspace') {
+            steps {
+                script {
+                    echo 'Cleaning workspace...'
+                    sh 'if [ -d pipelinejenkins ]; then rm -rf pipelinejenkins; fi'
+                }
+            }
+        }
+
+        stage('Clone Repository') {
+            steps {
+                script {
+                    echo 'Cloning repository...'
+                    sh 'git clone "https://github.com/roydendsouza31/jenkins-pipeline.git"'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Use Docker Pipeline plugin to build the Docker image
-                    def app = docker.build(IMAGE_NAME)
+                    echo 'Building Docker image...'
+                    sh 'docker build -t testimage:latest .'
                 }
             }
         }
@@ -19,22 +32,10 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Stop and remove any existing container
-                    sh "docker stop ${CONTAINER_NAME} || true"
-                    sh "docker rm ${CONTAINER_NAME} || true"
-                    
-                    // Run the Docker container in daemon mode
-                    docker.image(IMAGE_NAME).run("-d --name ${CONTAINER_NAME} -p 5000:5000")
+                    echo 'Running Docker container...'
+                    sh 'docker run -d --name testcontainer -p 5000:5000 testimage:latest'
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            // Clean up: Remove container if it exists
-            sh "docker stop ${CONTAINER_NAME} || true"
-            sh "docker rm ${CONTAINER_NAME} || true"
         }
     }
 }
