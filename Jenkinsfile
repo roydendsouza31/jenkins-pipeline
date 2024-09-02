@@ -13,16 +13,6 @@ pipeline {
             }
         }
 
-        
-        stage('Clean Workspace') {
-            steps {
-                script {
-                    echo 'Cleaning workspace...'
-                    sh 'if [ -d pipelinejenkins ]; then rm -rf pipelinejenkins; fi'
-                }
-            }
-        }
-
         stage('Clone Repository') {
             steps {
                 script {
