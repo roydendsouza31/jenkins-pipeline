@@ -5,18 +5,37 @@ pipeline {
         stage('Clean Workspace') {
             steps {
                 script {
-                    if (fileExists('jenkins-pipeline')) {
-                        sh 'rm -rf jenkins-pipeline'
-                    }
+                    echo 'Cleaning workspace...'
+                    sh 'if [ -d pipelinejenkins ]; then rm -rf pipelinejenkins; fi'
                 }
             }
         }
+
         stage('Clone Repository') {
             steps {
-                echo 'Cloning repository...'
-                sh 'git clone https://github.com/roydendsouza31/jenkins-pipeline.git'
+                script {
+                    echo 'Cloning repository...'
+                    sh 'git clone "https://github.com/roydendsouza31/jenkins-pipeline.git"'
+                }
             }
         }
-        // Other stages like Build Docker Image, Run Docker Container, etc.
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo 'Building Docker image...'
+                    sh 'docker build -t testimage:latest .'
+                }
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    echo 'Running Docker container...'
+                    sh 'docker run -d --name testcontainer -p 5000:5000 testimage:latest'
+                }
+            }
+        }
     }
 }
