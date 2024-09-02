@@ -2,6 +2,18 @@ pipeline {
     agent any
 
     stages {
+
+        stage('Clean Workspace') {
+            steps {
+                script {
+                    if (fileExists('jenkins-pipeline')) {
+                    sh 'rm -rf jenkins-pipeline'
+                    }
+                }
+            }
+        }
+
+        
         stage('Clean Workspace') {
             steps {
                 script {
