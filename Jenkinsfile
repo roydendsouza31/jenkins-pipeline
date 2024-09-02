@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     echo 'Cleaning workspace...'
-                    sh 'if [ -d pipelinejenkins ]; then rm -rf pipelinejenkins; fi'
+                    sh 'if [ -d jenkins-pipeline ]; then rm -rf jenkins-pipeline; fi'
                 }
             }
         }
